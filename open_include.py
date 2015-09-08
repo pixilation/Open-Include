@@ -90,6 +90,20 @@ def plugin_loaded():
     global s
     s = sublime.load_settings('Open-Include.sublime-settings')
 
+# http://stackoverflow.com/a/14742779
+def get_actual_filename(name):
+    import glob
+    dirs = name.split('\\')
+    # disk letter
+    test_name = [dirs[0].upper()]
+    for d in dirs[1:]:
+        test_name += ["%s[%s]" % (d[:-1], d[-1])]
+    res = glob.glob('\\'.join(test_name))
+    if not res:
+        #File not found
+        return None
+    return res[0]
+
 
 class OpenInclude(sublime_plugin.TextCommand):
     def run(self, edit = None):
@@ -506,6 +520,10 @@ class OpenIncludeThread(threading.Thread):
         if s.get('in_secondary_colum', False):
             window.run_command('set_layout', {"cols": [0.0, 0.5, 1.0], "rows": [0.0, 1.0], "cells": [[0, 0, 1, 1], [1, 0, 2, 1]]})
             window.focus_group(1)
+        if s.get("use_filesystem_casing", False):
+            path_normalized = normalize(path)
+            if os.path.lexists(path_normalized):
+                path = get_actual_filename(path_normalized)
         window.open_file(path)
 
 class OpenIncludeFindInFileGoto():

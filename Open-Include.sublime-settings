@@ -20,6 +20,9 @@
 	// ~/Project/file_name -> /home/user_id/Project/file_name
 	"expand_tilde": true,
 
+	// Files opened in sublime on case-insensitive systems will use the filesystem casing
+	"use_filesystem_casing": false,
+
 	// Additionally check for these combinations of extension and prefix when
 	// searching for a file
 	"auto_extension": [
